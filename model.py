@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
 
 # Loading the packages
 import pandas
@@ -10,25 +5,13 @@ import cv2
 import numpy
 import matplotlib.pyplot as plt
 
-
-# In[2]:
-
-
 # loading the csv file using pandas.
 df = pandas.read_csv(r"data/driving_log.csv",header=None)
 # checking the first five rows
 df.head()
 
-
-# In[3]:
-
-
 #checking the shape of data
 df.shape
-
-
-# In[4]:
-
 
 # creating list for storing the images and the respective measurements
 images = []
@@ -65,16 +48,8 @@ for i in range(df.shape[0]):
     # appending the respective measurements
     measurements.extend((steering_center,steering_left,steering_right))
 
-
-# In[5]:
-
-
 #checking the total number of images
 len(images)
-
-
-# In[6]:
-
 
 # image augementation using flipping the images and reversing the sign of the respective measurement
 aug_images,aug_measurements = [], []
@@ -84,30 +59,14 @@ for i in range(len(images)):
     aug_images.append(cv2.flip(images[i],1))
     aug_measurements.append(measurements[i]*-1.0)
 
-
-# In[7]:
-
-
 # converting the images and measurements to numpy array format
 xtrain = numpy.array(aug_images)
 ytrain = numpy.array(aug_measurements)
 
-
-# In[8]:
-
-
 print(xtrain.shape)
 print(ytrain.shape)
 
-
-# In[9]:
-
-
 from keras import models,layers
-
-
-# In[10]:
-
 
 # creating the mdoel
 model = models.Sequential()
@@ -132,10 +91,6 @@ model.add(layers.Dense(10,activation='relu'))
 # the output layer
 model.add(layers.Dense(1))
 
-
-# In[11]:
-
-
 # compile the model, optimizer used - RMSProp, loss = MSE
 model.compile(optimizer='RMSProp',loss='mse')
 # train the model with 10 epochs and 20% validation split
@@ -146,16 +101,8 @@ history_object = model.fit(xtrain,ytrain,
                            batch_size=128,
                            verbose=True)
 
-
-# In[12]:
-
-
 # save the trained model
 model.save('model.h5')
-
-
-# In[13]:
-
 
 # analysing the loss function for train and validation data
 plt.plot(history_object.history['loss'])
@@ -165,10 +112,3 @@ plt.ylabel('mean squared error loss')
 plt.xlabel('epoch')
 plt.legend(['training set', 'validation set'], loc='upper right')
 plt.show()
-
-
-# In[ ]:
-
-
-
-
